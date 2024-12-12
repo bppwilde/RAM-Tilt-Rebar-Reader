@@ -70,6 +70,7 @@ from streamlit_file_browser import st_file_browser
 # %% Streamlit file broswer to get the folder path were the .tup files are stored
 event = st_file_browser("example_artifacts", key='A')
 st.write(event)
+name = st.text_input("Enter your name")
 
 # %%
 def reading_tup():
@@ -203,6 +204,7 @@ def panel_geom(pnl_data, p_fig):
         
 def plot_verticals(v_data, v_fig, l_size=10, f_size=12):
     panel_geom(v_data, v_fig)
+    reb_area = ''
 
     # Plot Vertical and Horizontal Rebar
     x_values = set()
@@ -240,8 +242,7 @@ def plot_verticals(v_data, v_fig, l_size=10, f_size=12):
             rebar = output_list[i]
             x = (x_values[int(rebar[0])+1] - x_values[int(rebar[0])])/2 + x_values[int(rebar[0])]
             r_size = int(rebar[2])+2
-            r_area = r_areas(rebar)
-            line = v_fig.plot([x,x],[rebar[5],rebar[6]], ls='-', label=f'({int(rebar[1])}) #{r_size} @ {round(rebar[4]*12)} in {r_area}')
+            line = v_fig.plot([x,x],[rebar[5],rebar[6]], ls='-', label=f'({int(rebar[1])}) #{r_size} @ {round(rebar[4]*12)} in')
             xdata, ydata = line[0].get_data()
             v_fig.annotate('',xy=(x_values[int(rebar[0])+1], mean(ydata)), xytext=(x_values[int(rebar[0])], mean(ydata)), arrowprops=dict(color=line[0].get_color(),arrowstyle='|-|'))
             v_fig.annotate(line[0].get_label().replace('@','\n@'), xy=(xdata[0], mean(ydata)), rotation=90, fontsize = f_size, ha='center', va='center', bbox=dict(facecolor='white', edgecolor=line[0].get_color()))
@@ -251,7 +252,7 @@ def plot_verticals(v_data, v_fig, l_size=10, f_size=12):
         
 def plot_horizontals(h_data, h_fig, l_size=10, f_size=12):
     panel_geom(h_data, h_fig)
-    
+    reb_area = ''
     # Plot Vertical and Horizontal Rebar
     x_values = set()
     y_values = set()
@@ -296,7 +297,7 @@ def plot_horizontals(h_data, h_fig, l_size=10, f_size=12):
                 case _ if (x2-x1) <= 4:
                     h_label = f'#3 Ties @7 in'
                 case _:
-                    h_label = f'({int(rebar[0])}) #{r_size} @ {round(rebar[3]*12)} in {r_areas(rebar)}'
+                    h_label = f'({int(rebar[0])}) #{r_size} @ {round(rebar[3]*12)} in'
 
             line = h_fig.plot([x1,x2],[y,y], ls='-', label=h_label)
             if f'#{4} @ {18} in' not in h_label:
@@ -307,24 +308,24 @@ def plot_horizontals(h_data, h_fig, l_size=10, f_size=12):
         h_fig.legend(loc=9, ncols=5, fontsize=l_size)
 
         
-def r_areas(rbr):
-    if rbrcheck_var.get() == 1:
-        rebar_areas = {
-            2: 0.05,
-            3: 0.11,
-            4: 0.2,
-            5: 0.31,
-            6: 0.44,
-            7: 0.6,
-            8: 0.79,
-            9: 1.00,
-            10: 1.27
-        }  
-        r_sze = int(rbr[2])+2
-        reb_area = f'\n({round(int(rbr[1])*rebar_areas[r_sze],2)} in2)'
-    else:
-        reb_area = ''
-    return reb_area
+# def r_areas(rbr):
+#     if rbrcheck_var.get() == 1:
+#         rebar_areas = {
+#             2: 0.05,
+#             3: 0.11,
+#             4: 0.2,
+#             5: 0.31,
+#             6: 0.44,
+#             7: 0.6,
+#             8: 0.79,
+#             9: 1.00,
+#             10: 1.27
+#         }  
+#         r_sze = int(rbr[2])+2
+#         reb_area = f'\n({round(int(rbr[1])*rebar_areas[r_sze],2)} in2)'
+#     else:
+#         reb_area = ''
+#     return reb_area
 
 # %%
 # Function to extract numerical portion from a string

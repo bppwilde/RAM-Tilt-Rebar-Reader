@@ -1,5 +1,5 @@
 # %%
-import sys
+# import sys
 import os
 import re
 import pandas as pd
@@ -9,11 +9,11 @@ from matplotlib.backends.backend_pdf import PdfPages
 from matplotlib.patches import Rectangle
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 from statistics import mean
-from PyPDF2 import PdfMerger
-import tkinter as tk
-from tkinter import filedialog
-from tkinter import ttk
-from tkinter import messagebox
+# from PyPDF2 import PdfMerger
+# import tkinter as tk
+# from tkinter import filedialog
+# from tkinter import ttk
+# from tkinter import messagebox
 import streamlit as st
 from streamlit_file_browser import st_file_browser
 
@@ -67,7 +67,7 @@ from streamlit_file_browser import st_file_browser
 # # get the selected folder path after the window is closed
 # selected_folder_path = folder_var.get()
 
-# %%
+# %% Streamlit file broswer to get the folder path were the .tup files are stored
 event = st_file_browser("example_artifacts", key='A')
 st.write(event)
 
@@ -85,8 +85,8 @@ def reading_tup():
     # Read in command-line arguments
     #arg1 = sys.argv[1]
     # Define the folder containing the text files
-    # folder = 'C:\\Users\\porte\\OneDrive\\Jupyter Notebooks\\Wall Panels'
-    folder = selected_folder_path
+    folder = 'C:\\Users\\porte\\OneDrive\\Jupyter Notebooks\\Wall Panels'
+    # folder = selected_folder_path
 
     #Define the pdf names to be used
     sched = folder + '\\Schedule.pdf'
@@ -137,42 +137,28 @@ def reading_tup():
     return [items, df, sched, panels, sched_panels]
 
 # %%
-def on_row_select(event):
-    selected_row = treeview.focus()
-    selected_column = treeview.identify_column(event.x)
-    if selected_row:
-        if selected_column == "#1" or selected_column == "#2":
-            t_num = treeview.item(selected_row)['values'][2]
-            current_value = treeview.set(selected_row, column=selected_column)
-            new_value = "X" if current_value != "X" else ""
-            treeview.set(selected_row, column=selected_column, value=new_value)
-            test = df.loc[df['PanelType']== t_num].index.values.astype(int)[0]
-            data = df.iloc[test]
-            match selected_column:
-                case '#1':
-                    generate_graph(data, ax1, canvas1)
-                case '#2':
-                    generate_graph(data, ax2, canvas2)
-            # Clear values in the rest of the column
-            for item in treeview.get_children():
-                if item != selected_row:
-                    treeview.set(item, column=selected_column, value="")
+# def on_row_select(event):
+#     selected_row = treeview.focus()
+#     selected_column = treeview.identify_column(event.x)
+#     if selected_row:
+#         if selected_column == "#1" or selected_column == "#2":
+#             t_num = treeview.item(selected_row)['values'][2]
+#             current_value = treeview.set(selected_row, column=selected_column)
+#             new_value = "X" if current_value != "X" else ""
+#             treeview.set(selected_row, column=selected_column, value=new_value)
+#             test = df.loc[df['PanelType']== t_num].index.values.astype(int)[0]
+#             data = df.iloc[test]
+#             match selected_column:
+#                 case '#1':
+#                     generate_graph(data, ax1, canvas1)
+#                 case '#2':
+#                     generate_graph(data, ax2, canvas2)
+#             # Clear values in the rest of the column
+#             for item in treeview.get_children():
+#                 if item != selected_row:
+#                     treeview.set(item, column=selected_column, value="")
             
             
-def generate_graph(data, graph, canv):
-    # Generate a graph based on the selected row data
-    graph.clear()
-    plot_verticals(data, graph,6,7)
-    graph.set_title(f"{data['PanelType']}, {data['Tfc']}", fontsize=12)
-    canv.draw()
-
-    
-def update_area():
-    if rbrcheck_var.get() == 1:
-        rbrcheck_var.set(0)
-    else:
-        rbrcheck_var.set(1)
-
 # %%
 def panel_geom(pnl_data, p_fig):
     # Prep the panel outline XY points to use rectangle patch and add to figure
@@ -361,82 +347,6 @@ def sort_treeview(treeview):
 
 
 # %%
-def rebar_graph():
-    if viewcheck_var.get() == 1:
-        # Specify the columns to include and their order
-        columns_to_use = [df.columns[i] for i in [0, 5, 6, 1, 2, 3, 4]]
-        check_columns = ['Panel1', 'Panel2']
-
-        # Create the main window
-        root = tk.Tk()
-        root.title("DataFrame Viewer")
-
-        # Create a Treeview widget to display the DataFrame
-        treeview = ttk.Treeview(root)
-        treeview['columns'] = tuple(check_columns + columns_to_use)  # Use the specified columns
-        for col in (check_columns + columns_to_use):
-            treeview.heading(col, text=col)
-
-        treeview.column("#0", width=0, stretch=tk.NO)  # Hide the default first column
-        treeview.column("#1", width=75, stretch=tk.NO)
-        treeview.column("#2", width=75, stretch=tk.NO)
-        # # Insert DataFrame rows into the Treeview, using the specified columns and order
-        for _, row in df.iterrows():
-            # Create a list to hold the checkbox values for each checkbox column
-            values = ["", ""] + [row[col] for col in columns_to_use]
-            tagged = 'oddrow' if (_ % 2) == 0 else 'evenrow'
-            # Insert the row values, including the checkbox values, into the Treeview
-            treeview.insert("", tk.END, values=values, tags=tagged)
-
-        treeview.tag_configure('oddrow', background='snow')
-        treeview.tag_configure('evenrow', background='SkyBlue1')
-        treeview.grid(row=0, column=0, columnspan=3, sticky=tk.NSEW)
-
-        # Bind the row selection event to the on_row_select function
-        treeview.bind("<ButtonRelease-1>", on_row_select)
-
-        # Create the Figure and Axes for the first graph
-        fig1, ax1 = plt.subplots(figsize=(6, 4))
-        canvas1 = FigureCanvasTkAgg(fig1, master=root)
-        canvas1.get_tk_widget().grid(row=1, column=0, sticky=tk.NSEW)
-
-        # Create the Figure and Axes for the second graph
-        fig2, ax2 = plt.subplots(figsize=(6, 4))
-        canvas2 = FigureCanvasTkAgg(fig2, master=root)
-        canvas2.get_tk_widget().grid(row=1, column=1, sticky=tk.NSEW)
-
-        # Add checkbox for rebar area for toggle purposes
-        check_button1 = tk.Checkbutton(root, text="Rebar Area", variable=rbrcheck_var, command=update_area)
-        check_button1.grid(row=2, column=0, sticky=tk.W)
-
-        # Update the initial checkbox state based on the existing variable
-        if rbrcheck_var.get() == 1:
-            check_button1.select()
-        else:
-            check_button1.deselect()
-
-        # Close button function
-        def close_window():
-            pdfcheck_var.set(1)
-            root.destroy()
-
-        # Create the close button
-        close_button = tk.Button(root, text="Print PDF", bg='azure', fg='red4', command=close_window)
-        close_button.grid(row=2, column=1, columnspan=2, sticky=tk.E)
-
-        # Configure the grid to resize the columns and rows
-        root.columnconfigure(0, weight=1)
-        root.columnconfigure(1, weight=1)
-        root.columnconfigure(2, weight=1)
-        root.rowconfigure(0, weight=0)
-        root.rowconfigure(1, weight=1)
-        root.rowconfigure(2, weight=0)
-
-        # Call the sort_treeview function to sort the Treeview initially
-        sort_treeview(treeview)
-
-        root.mainloop()
-
 
 # %%
 # if viewcheck_var.get() == 1:
@@ -561,72 +471,7 @@ def dataframe_to_pdf(df, filename, numpages=(1, 1), pagesize=(11, 8.5)):
             plt.close()
 
 # %%
-def plot_pdf():
-    if pdfcheck_var.get() == 1:
-        # Loop through each chunk and plot 6 graphs on a 36"x42" size paper
-        with PdfPages(panels) as pdf:
-            for chunky in dfs:
-                chunk = chunky.reset_index() 
-                # number of columns and rows
-                col = 2
-
-                fig = plt.figure(constrained_layout=True, figsize=(42, 36))
-                subfigs = fig.subfigures(int(graphs/col), col)
-
-                for index, row in chunk.iterrows():            
-                    # Calculate the row and column position in the grid of 6 graphs
-                    row_pos = (index % 6) // col
-                    col_pos = (index % 6) % col
-
-                    # Plot the graph on the appropriate subplot by splitting the subfigure into Vertical and Horizontal rebar graphs
-                    subfig = subfigs.flat[index]
-                    axs = subfig.subplots(1,2)
-                    verts = axs[0]
-                    horzs = axs[1]
-
-                    # Use the modules to generate the graphs for verticals and horizontals
-                    plot_verticals(row, verts)
-                    plot_horizontals(row, horzs)
-
-                    # Set titles
-                    xp = 0
-                    wp = float(row['PanelLength'])
-                    yp = -float(row['BottomPanelHeight'])
-                    hp = -yp + float(row['ParapetHeight']) + float(row['PanelHeight'])
-                    panel_out = Rectangle((xp,yp), wp, hp, edgecolor = 'black', fill=False, lw=5)
-
-                    tx = panel_out.get_x() + panel_out.get_width()
-                    ty = panel_out.get_y() + panel_out.get_height()
-                    subfig.suptitle(f"{row['PanelType']}, {row['Tfc']}", fontsize=24)
-                    verts.set_title(f"Vertical Rebar (L={tx} ft, T/wall={ty} ft)", fontsize=14)
-                    horzs.set_title("Horizontal Rebar", fontsize=14)
-                    verts.plot()
-                    horzs.plot()
-
-                pdf.savefig(fig, bbox_inches='tight')
-
-        # Create a table with the specific columns you want to output
-        table_df = df[['PanelType', 'PanelThickness', 'PanelMaterial']]
-
-        dataframe_to_pdf(table_df, sched)
-        merger = PdfMerger()
-        merger.append(sched)
-        merger.append(panels)
-        merger.write(sched_panels)
-        merger.close()
-        os.remove(panels)
-        os.remove(sched)
-    # pdf.close()
-
-# %%
 items, df, sched, panels, sched_panels = reading_tup()
-rebar_graph()
 # Define number of graphs per page
 graphs = 6
 df, dfs = chunk_df()
-plot_pdf()
-
-# %%
-
-
-

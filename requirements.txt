@@ -1,5 +1,5 @@
 matplotlib==3.7.1
-numpy==1.25.0
+numpy>1.25.0
 pandas==2.0.2
 streamlit==1.41.0
 streamlit_file_browser==3.2.22

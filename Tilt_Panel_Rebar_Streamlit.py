@@ -2,15 +2,21 @@ import altair as alt
 import numpy as np
 import pandas as pd
 import streamlit as st
-import streamlit as st
-from streamlit_file_browser import st_file_browser
+import os
 
-#Create file browser button
-if st.button("Browse Folder"):
-    selected_folder = st_file_browser(".", show_choose_file=False, show_download_file=False)
+st.title("Local Folder Selection")
+
+uploaded_folder = st.file_uploader("Choose a folder", accept_multiple_files=True, type=[''])
+
+if uploaded_folder:
+    folder_path = os.path.dirname(uploaded_folder[0].name)
+    st.write(f"Selected folder: {folder_path}")
     
-    if selected_folder:
-        st.write(f"Selected folder: {selected_folder['path']}")
+    # List files in the selected folder
+    st.write("Files in the selected folder:")
+    for file in uploaded_folder:
+        st.write(file.name)
+
 
 
 """

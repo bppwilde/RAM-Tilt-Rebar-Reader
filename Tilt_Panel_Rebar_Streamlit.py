@@ -9,7 +9,7 @@ import os
 #%% Folder uploader
 st.title("Folder Upload System")
 
-uploaded_files = st.file_uploader("Choose files from a folder", accept_multiple_files=True, type=['tup]'])
+uploaded_files = st.file_uploader("Choose files from a folder", accept_multiple_files=True, type=['tup'])
 
 if uploaded_files:
     st.write("Uploaded files:")

@@ -4,7 +4,7 @@ import numpy as np
 import pandas as pd
 import streamlit as st
 import os
-
+import matplotlib.pyplot as plt
 
 #%% File uploader, that accepts only tup files. Other files can be uploaded but only the tup files will be accepted.
 accepted_ftype = ['tup']
@@ -18,51 +18,27 @@ if uploaded_files:
         st.write(f"- {file.name}")
     
     # Create a temporary directory to store uploaded files
-    temp_dir = "temp wall files."
+    temp_dir = "temp_wall_files"
     os.makedirs(temp_dir, exist_ok=True)
     
     for file in uploaded_files:
+        first_line = file.readline().decode('utf-8').strip()
+        st.write(f"First line of {file.name}: {first_line}")
+        
         file_path = os.path.join(temp_dir, file.name)
         with open(file_path, "wb") as f:
             f.write(file.getbuffer())
     
-    st.success(f"Files uploaded successfully to {temp_dir}")
+    st.success(f"Files uploaded successfully to {temp_dir} folder.")
 
     st.write(f"Number of files: {len(uploaded_files)}")
-#%%
+#%% Test Plot
+st.title("Matplotlib Plot in Streamlit")
 
-"""
-# Welcome to Streamlit!
+fig, ax = plt.subplots()
+ax.plot([1, 2, 3, 4, 5])
+ax.set_xlabel("X-axis")
+ax.set_ylabel("Y-axis")
+ax.set_title("Simple Line Plot")
 
-Edit `/streamlit_app.py` to customize this app to your heart's desire :heart:.
-If you have any questions, checkout our [documentation](https://docs.streamlit.io) and [community
-forums](https://discuss.streamlit.io).
-
-In the meantime, below is an example of what you can do with just a few lines of code:
-"""
-
-num_points = st.slider("Number of points in spiral", 1, 10000, 1100)
-num_turns = st.slider("Number of turns in spiral", 1, 300, 31)
-
-indices = np.linspace(0, 1, num_points)
-theta = 2 * np.pi * num_turns * indices
-radius = indices
-
-x = radius * np.cos(theta)
-y = radius * np.sin(theta)
-
-df = pd.DataFrame({
-    "x": x,
-    "y": y,
-    "idx": indices,
-    "rand": np.random.randn(num_points),
-})
-
-st.altair_chart(alt.Chart(df, height=700, width=700)
-    .mark_point(filled=True)
-    .encode(
-        x=alt.X("x", axis=None),
-        y=alt.Y("y", axis=None),
-        color=alt.Color("idx", legend=None, scale=alt.Scale()),
-        size=alt.Size("rand", legend=None, scale=alt.Scale(range=[1, 150])),
-    ))
+st.pyplot(fig)

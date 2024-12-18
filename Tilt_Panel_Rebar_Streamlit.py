@@ -28,7 +28,7 @@ if uploaded_files:
     
     st.success(f"Files uploaded successfully to {temp_dir}")
 
-    st.write(uploaded_files.count())
+    st.write(f"Number of files: {uploaded_files.count()}")
 #%%
 
 """

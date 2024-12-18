@@ -1,58 +1,31 @@
+#%%Import libraries
 import altair as alt
 import numpy as np
 import pandas as pd
 import streamlit as st
-import tkinter as tk
-from tkinter import filedialog
-from tkinter import ttk
-from tkinter import messagebox
-# %% Tkinter form to find folder path
-def browse_folder():
-    folder_path = filedialog.askdirectory()
-    if folder_path:
-        folder_var.set(folder_path)
+import os
 
-def ok_button():
-    root.destroy()
 
-root = tk.Tk()
-root.title("Folder Directory Browser")
+#%% Folder uploader
+st.title("Folder Upload System")
 
-# create a checkbox variable
-rbrcheck_var = tk.IntVar()
-viewcheck_var = tk.IntVar()
-pdfcheck_var = tk.IntVar()
+uploaded_files = st.file_uploader("Choose files from a folder", accept_multiple_files=True)
 
-# create a checkbox
-checkbox = tk.Checkbutton(root, text="Show Rebar Area", variable=rbrcheck_var)
-checkbox.pack()
-
-# create a checkbox
-checkbox = tk.Checkbutton(root, text="Show Rebar Viewer", variable=viewcheck_var)
-checkbox.pack()
-
-# create a checkbox
-checkbox = tk.Checkbutton(root, text="Print rebar to PDF", variable=pdfcheck_var)
-checkbox.pack()
-
-# create a label to display the selected folder path
-folder_var = tk.StringVar()
-folder_label = tk.Label(root, textvariable=folder_var, width=50)
-folder_label.pack()
-
-# add a button to browse folders
-browse_button = tk.Button(root, text="Browse", command=browse_folder)
-browse_button.pack()
-
-# add an "OK" button to close the dialog
-ok_button = tk.Button(root, text="OK", command=ok_button)
-ok_button.pack()
-
-root.mainloop()
-
-# get the selected folder path after the window is closed
-selected_folder_path = folder_var.get()
-
+if uploaded_files:
+    st.write("Uploaded files:")
+    for file in uploaded_files:
+        st.write(f"- {file.name}")
+    
+    # Create a temporary directory to store uploaded files
+    temp_dir = "temp_uploads"
+    os.makedirs(temp_dir, exist_ok=True)
+    
+    for file in uploaded_files:
+        file_path = os.path.join(temp_dir, file.name)
+        with open(file_path, "wb") as f:
+            f.write(file.getbuffer())
+    
+    st.success(f"Files uploaded successfully to {temp_dir}")
 #%%
 
 """

@@ -2,6 +2,16 @@ import altair as alt
 import numpy as np
 import pandas as pd
 import streamlit as st
+import streamlit as st
+from streamlit_file_browser import st_file_browser
+
+#Create file browser button
+if st.button("Browse Folder"):
+    selected_folder = st_file_browser(".", show_choose_file=False, show_download_file=False)
+    
+    if selected_folder:
+        st.write(f"Selected folder: {selected_folder['path']}")
+
 
 """
 # Welcome to Streamlit!

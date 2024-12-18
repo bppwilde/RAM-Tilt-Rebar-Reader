@@ -2,21 +2,12 @@ import altair as alt
 import numpy as np
 import pandas as pd
 import streamlit as st
-import os
+import wx
 
-st.title("Local Folder Selection")
-
-uploaded_folder = st.file_uploader("Choose a folder", accept_multiple_files=True, type=[''])
-
-if uploaded_folder:
-    folder_path = os.path.dirname(uploaded_folder[0].name)
-    st.write(f"Selected folder: {folder_path}")
-    
-    # List files in the selected folder
-    st.write("Files in the selected folder:")
-    for file in uploaded_folder:
-        st.write(file.name)
-
+if st.button("Browse"):
+    dialog = wx.DirDialog(None, "Select a folder:", style=wx.DD_DEFAULT_STYLE | wx.DD_NEW_DIR_BUTTON)
+if dialog.ShowModal() == wx.ID_OK:
+    folder_path = dialog.GetPath() # folder_path will contain the path of the folder you have selected as string
 
 
 """

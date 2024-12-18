@@ -2,13 +2,58 @@ import altair as alt
 import numpy as np
 import pandas as pd
 import streamlit as st
-import wx
+import tkinter as tk
+from tkinter import filedialog
+from tkinter import ttk
+from tkinter import messagebox
+# %% Tkinter form to find folder path
+def browse_folder():
+    folder_path = filedialog.askdirectory()
+    if folder_path:
+        folder_var.set(folder_path)
 
-if st.button("Browse"):
-    dialog = wx.DirDialog(None, "Select a folder:", style=wx.DD_DEFAULT_STYLE | wx.DD_NEW_DIR_BUTTON)
-if dialog.ShowModal() == wx.ID_OK:
-    folder_path = dialog.GetPath() # folder_path will contain the path of the folder you have selected as string
+def ok_button():
+    root.destroy()
 
+root = tk.Tk()
+root.title("Folder Directory Browser")
+
+# create a checkbox variable
+rbrcheck_var = tk.IntVar()
+viewcheck_var = tk.IntVar()
+pdfcheck_var = tk.IntVar()
+
+# create a checkbox
+checkbox = tk.Checkbutton(root, text="Show Rebar Area", variable=rbrcheck_var)
+checkbox.pack()
+
+# create a checkbox
+checkbox = tk.Checkbutton(root, text="Show Rebar Viewer", variable=viewcheck_var)
+checkbox.pack()
+
+# create a checkbox
+checkbox = tk.Checkbutton(root, text="Print rebar to PDF", variable=pdfcheck_var)
+checkbox.pack()
+
+# create a label to display the selected folder path
+folder_var = tk.StringVar()
+folder_label = tk.Label(root, textvariable=folder_var, width=50)
+folder_label.pack()
+
+# add a button to browse folders
+browse_button = tk.Button(root, text="Browse", command=browse_folder)
+browse_button.pack()
+
+# add an "OK" button to close the dialog
+ok_button = tk.Button(root, text="OK", command=ok_button)
+ok_button.pack()
+
+root.mainloop()
+
+# get the selected folder path after the window is closed
+selected_folder_path = folder_var.get()
+
+#%%
 
 """
 # Welcome to Streamlit!

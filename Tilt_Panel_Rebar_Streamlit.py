@@ -6,10 +6,11 @@ import streamlit as st
 import os
 
 
-#%% Folder uploader
+#%% File uploader, that accepts only tup files. Other files can be uploaded but only the tup files will be accepted.
+accepted_ftype = ['tup']
 st.title("Folder Upload System")
 
-uploaded_files = st.file_uploader("Choose files from a folder", accept_multiple_files=True, type=['tup'])
+uploaded_files = st.file_uploader("Choose files from a folder", accept_multiple_files=True, type=accepted_ftype)
 
 if uploaded_files:
     st.write("Uploaded files:")
@@ -17,7 +18,7 @@ if uploaded_files:
         st.write(f"- {file.name}")
     
     # Create a temporary directory to store uploaded files
-    temp_dir = "temp_uploads"
+    temp_dir = "temp wall files."
     os.makedirs(temp_dir, exist_ok=True)
     
     for file in uploaded_files:
@@ -26,6 +27,8 @@ if uploaded_files:
             f.write(file.getbuffer())
     
     st.success(f"Files uploaded successfully to {temp_dir}")
+
+    st.write(uploaded_files.count())
 #%%
 
 """

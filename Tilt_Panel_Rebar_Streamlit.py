@@ -24,7 +24,9 @@ if uploaded_files:
     for file in uploaded_files:
         first_line = file.readline().decode('utf-8').strip()
         st.write(f"First line of {file.name}: {first_line}")
-        
+        first_line = file.readline().decode('utf-8').strip()
+        st.write(f"First line of {file.name}: {first_line}")
+
         file_path = os.path.join(temp_dir, file.name)
         with open(file_path, "wb") as f:
             f.write(file.getbuffer())

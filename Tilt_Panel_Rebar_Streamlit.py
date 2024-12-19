@@ -43,7 +43,7 @@ if uploaded_files:
             item_dict['PanelType']=file.replace('.tup', '')
 
             # Read in the file
-            with open(folder + "\\" + file, 'r') as f:
+            with open(file, 'r') as f:
                 lines = f.readlines()
             # Loop through each line in the file
             for line in lines:

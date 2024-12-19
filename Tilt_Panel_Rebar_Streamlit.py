@@ -4,6 +4,7 @@ import numpy as np
 import pandas as pd
 import streamlit as st
 import os
+import io
 import matplotlib.pyplot as plt
 #%% Test Plot
 def test_plot(x, s_title):
@@ -44,7 +45,9 @@ if uploaded_files:
             item_dict['PanelType']=file.name.replace('.tup', '')
 
             # Read all lines in the file
-            lines = file.read()
+            stringio = io.StringIO(file.getvalue().decode("utf-8"))
+            lines = stringio.read()
+            # lines = file.read().decode('utf-8')
 
             # Loop through each line in the file
             for line in lines:

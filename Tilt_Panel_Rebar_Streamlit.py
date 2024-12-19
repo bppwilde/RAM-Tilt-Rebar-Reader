@@ -39,7 +39,6 @@ if uploaded_files:
     os.makedirs(temp_dir, exist_ok=True)
     i = 0
     for file in uploaded_files:
-        st.header(f"File name = {file.name}")
         if file.name.endswith('.tup'):
             # Set Panel type to the name of the .tup file
             item_dict['PanelType']=file.name.replace('.tup', '')
@@ -47,7 +46,7 @@ if uploaded_files:
             # Read all lines in the file
             lines = file.read().decode('utf-8', errors='replace')
             # lines = file.read().decode('utf-8')
-
+            st.header(f"First line = {lines[0]}")
             # Loop through each line in the file
             for line in lines:
                 # Loop through each item in the items list

@@ -45,8 +45,7 @@ if uploaded_files:
             item_dict['PanelType']=file.name.replace('.tup', '')
 
             # Read all lines in the file
-            stringio = io.StringIO(file.getvalue().decode("ansi"))
-            lines = stringio.read()
+            lines = file.read().decode('utf-8', errors='replace')
             # lines = file.read().decode('utf-8')
 
             # Loop through each line in the file

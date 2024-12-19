@@ -43,9 +43,9 @@ if uploaded_files:
             # Set Panel type to the name of the .tup file
             item_dict['PanelType']=file.name.replace('.tup', '')
 
-            # Read in the file
-            with open(file, 'r') as f:
-                lines = f.readlines()
+            # Read all lines in the file
+            lines = file.read().decode('utf-8')
+
             # Loop through each line in the file
             for line in lines:
                 # Loop through each item in the items list

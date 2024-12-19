@@ -74,10 +74,10 @@ if uploaded_files:
             for key in item_dict:
                 item_dict[key] = np.nan
 
-        # Change Material to psi and thickness add inches
-        df['PanelMaterial'] = df['PanelMaterial'] + '000 psi'
-        df['PanelThickness'] = df['PanelThickness'] + ' inches'
-        df['Tfc'] = 'T=' + df['PanelThickness'] + '/f\'c=' + df['PanelMaterial']
+    # Change Material to psi and thickness add inches
+    df['PanelMaterial'] = df['PanelMaterial'] + '000 psi'
+    df['PanelThickness'] = df['PanelThickness'] + ' inches'
+    df['Tfc'] = 'T=' + df['PanelThickness'] + '/f\'c=' + df['PanelMaterial']
     
     
     st.success(f"Files uploaded successfully to {temp_dir} folder.")

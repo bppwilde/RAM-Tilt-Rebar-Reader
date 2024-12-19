@@ -44,11 +44,12 @@ if uploaded_files:
             item_dict['PanelType']=file.name.replace('.tup', '')
 
             # Read all lines in the file
-            lines = file.read().decode('utf-8', errors='replace')
-            # lines = file.read().decode('utf-8')
-            st.header(f"First line = {lines[0]}")
+            # lines = file.read().decode('utf-8', errors='replace')
+            # # lines = file.read().decode('utf-8')
+            # st.header(f"First line = {lines[0]}")
             # Loop through each line in the file
-            for line in lines:
+            for encoded_line in file:
+                line = encoded_line.decode("utf-8", errors="replace").strip()
                 # Loop through each item in the items list
                 for item in items:
                     # Check if the item is in the line

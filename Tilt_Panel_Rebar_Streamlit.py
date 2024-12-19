@@ -38,43 +38,44 @@ if uploaded_files:
     os.makedirs(temp_dir, exist_ok=True)
     i = 0
     for file in uploaded_files:
-        if file.endswith('.tup'):
-            # Set Panel type to the name of the .tup file
-            item_dict['PanelType']=file.replace('.tup', '')
+        st.header(f"File name = {file.name}")
+        # if file.endswith('.tup'):
+        #     # Set Panel type to the name of the .tup file
+        #     item_dict['PanelType']=file.replace('.tup', '')
 
-            # Read in the file
-            with open(file, 'r') as f:
-                lines = f.readlines()
-            # Loop through each line in the file
-            for line in lines:
-                # Loop through each item in the items list
-                for item in items:
-                    # Check if the item is in the line
-                    if line.startswith(f"{item}"):
-                        try:
-                            # Extract the value from the line
-                            value = str(line.split("=")[1].strip()).replace(" ft", "").replace(" in", "")
-                            if value.startswith('C'):
-                                value = value.split("-")[0].strip().replace("C ", "")
-                            # Append the value to the dictionary with a semicolon separator
-                            if str(item_dict[item]) == 'nan':
-                                item_dict[item] = value
-                            else:
-                                item_dict[item] = str(item_dict[item]) + ';' + value
-                            break
-                        except:
-                            # If the item is not in the line, append None to the dictionary
-                            item_dict[item] = None
+        #     # Read in the file
+        #     with open(file, 'r') as f:
+        #         lines = f.readlines()
+        #     # Loop through each line in the file
+        #     for line in lines:
+        #         # Loop through each item in the items list
+        #         for item in items:
+        #             # Check if the item is in the line
+        #             if line.startswith(f"{item}"):
+        #                 try:
+        #                     # Extract the value from the line
+        #                     value = str(line.split("=")[1].strip()).replace(" ft", "").replace(" in", "")
+        #                     if value.startswith('C'):
+        #                         value = value.split("-")[0].strip().replace("C ", "")
+        #                     # Append the value to the dictionary with a semicolon separator
+        #                     if str(item_dict[item]) == 'nan':
+        #                         item_dict[item] = value
+        #                     else:
+        #                         item_dict[item] = str(item_dict[item]) + ';' + value
+        #                     break
+        #                 except:
+        #                     # If the item is not in the line, append None to the dictionary
+        #                     item_dict[item] = None
 
-            df1 = pd.DataFrame.from_dict([item_dict])
-            df = pd.concat([df, df1], ignore_index=True)
-            for key in item_dict:
-                item_dict[key] = np.nan
+        #     df1 = pd.DataFrame.from_dict([item_dict])
+        #     df = pd.concat([df, df1], ignore_index=True)
+        #     for key in item_dict:
+        #         item_dict[key] = np.nan
 
-        # Change Material to psi and thickness add inches
-        df['PanelMaterial'] = df['PanelMaterial'] + '000 psi'
-        df['PanelThickness'] = df['PanelThickness'] + ' inches'
-        df['Tfc'] = 'T=' + df['PanelThickness'] + '/f\'c=' + df['PanelMaterial']
+        # # Change Material to psi and thickness add inches
+        # df['PanelMaterial'] = df['PanelMaterial'] + '000 psi'
+        # df['PanelThickness'] = df['PanelThickness'] + ' inches'
+        # df['Tfc'] = 'T=' + df['PanelThickness'] + '/f\'c=' + df['PanelMaterial']
     
     
     st.success(f"Files uploaded successfully to {temp_dir} folder.")

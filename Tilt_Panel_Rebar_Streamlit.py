@@ -80,7 +80,7 @@ if uploaded_files:
     df['Tfc'] = 'T=' + df['PanelThickness'] + '/f\'c=' + df['PanelMaterial']
     
     
-    st.success(f"Files uploaded successfully to {temp_dir} folder.")
+    st.success(f"Files uploaded successfully.")
 
     st.write(f"Number of files: {len(uploaded_files)}")
     

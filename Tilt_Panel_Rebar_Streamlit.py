@@ -85,5 +85,6 @@ if uploaded_files:
     st.write(f"Number of files: {len(uploaded_files)}")
     
     #Display the dataframe from reading the tup files for testing purposes
-    st.dataframe(df)
+    selected_columns = ['PanelType', 'PanelThickness', 'PanelMaterial']
+    st.dataframe(df[selected_columns])
 

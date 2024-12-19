@@ -41,7 +41,7 @@ if uploaded_files:
         st.header(f"File name = {file.name}")
         if file.name.endswith('.tup'):
             # Set Panel type to the name of the .tup file
-            item_dict['PanelType']=file.replace('.tup', '')
+            item_dict['PanelType']=file.name.replace('.tup', '')
 
             # Read in the file
             with open(file, 'r') as f:

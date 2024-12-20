@@ -195,13 +195,9 @@ accepted_ftype = ['tup']
 folder_title = st.title("Upload RAM files:")
 # Create a placeholder for the file uploader
 uploader_placeholder = st.empty()
-
+show_uploader = st.checkbox("Show file uploader", value=True)
 # Create a container for the plots
 plot_container = st.container()
-
-
-show_uploader = st.checkbox("Show file uploader", value=True)
-placeholder = st.empty()
 
 if show_uploader:
     folder_title.text("Upload RAM files:")
@@ -271,7 +267,8 @@ if show_uploader:
         df_height = (len(df) + 1) * 35 + 3  # Adjust the multiplier as needed for your specific case
 
         # Display the dataframe with the calculated height
-        st.dataframe(df[selected_columns], height=df_height)
+        with plot_container:
+            st.dataframe(df[selected_columns], height=df_height)
 
         for index, row in df.iterrows():
 
@@ -319,6 +316,5 @@ if show_uploader:
         files_up_succ.empty()
 else:
     folder_title.empty()
-    placeholder.empty()
 
     

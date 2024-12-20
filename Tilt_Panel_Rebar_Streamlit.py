@@ -198,9 +198,11 @@ show_uploader = st.checkbox("Show file uploader", value=True)
 placeholder = st.empty()
 
 if show_uploader:
+    folder_title.text("Upload RAM files:")
     with placeholder:
         uploaded_files = st.file_uploader("Choose files from a folder", accept_multiple_files=True, type=accepted_ftype)
 else:
+    folder_title.empty()
     placeholder.empty()
 
 # Define a list of items to look for in each line
@@ -316,8 +318,6 @@ if uploaded_files:
      # Clear the status message when done
     status_text.empty()
     progress_bar.empty()
-    folder_title.empty()
-    placeholder.empty()
     files_up_succ.empty()
 
     

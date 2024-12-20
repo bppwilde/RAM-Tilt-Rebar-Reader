@@ -201,7 +201,7 @@ show_uploader = st.checkbox("Hide", value=False)
 
 if show_uploader:
     placeholder = st.empty()
-    folder_title = st.title("Upload test files:")
+    folder_title.text("Testing")
 else:
     with placeholder:
         uploaded_files = st.file_uploader("Choose files from a folder", accept_multiple_files=True, type=accepted_ftype)

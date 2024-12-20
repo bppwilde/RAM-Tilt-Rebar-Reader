@@ -226,11 +226,6 @@ if show_uploader:
             # Set Panel type to the name of the .tup file
             item_dict['PanelType']=file.name.replace('.tup', '')
 
-            # Read all lines in the file
-            # lines = file.read().decode('utf-8', errors='replace')
-            # # lines = file.read().decode('utf-8')
-            # st.header(f"First line = {lines[0]}")
-            # Loop through each line in the file
             for encoded_line in file:
                 line = encoded_line.decode("utf-8", errors="replace").strip()
                 # Loop through each item in the items list
@@ -310,7 +305,8 @@ if show_uploader:
             verts.set_title(f"Vertical Rebar (L={tx} ft, T/wall={ty} ft)", fontsize=14)
             horzs.set_title("Horizontal Rebar", fontsize=14)
             # plt.tight_layout()
-            st.pyplot(fig)
+            with plot_container:
+                st.pyplot(fig)
 
             # Update the progress bar and status message
             progress = (index + 1) / len(df)

@@ -194,10 +194,14 @@ def plot_horizontals(h_data, h_fig,  f_size=12):
 accepted_ftype = ['tup']
 folder_title = st.title("Upload RAM files:")
 
+show_uploader = st.checkbox("Show file uploader", value=True)
 placeholder = st.empty()
 
-with placeholder:
-    uploaded_files = st.file_uploader("Choose files from a folder", accept_multiple_files=True, type=accepted_ftype)
+if show_uploader:
+    with placeholder:
+        uploaded_files = st.file_uploader("Choose files from a folder", accept_multiple_files=True, type=accepted_ftype)
+else:
+    placeholder.empty()
 
 # Define a list of items to look for in each line
 items = ['PanelType', 'ParapetHeight', 'BottomPanelHeight', 'PanelHeight', 'PanelLength', 'PanelThickness', 'PanelMaterial', 'Openings', 'DataVBarsCount', 'DataVBarsVBars','DataHBarsCount', 'DataHBarsHBars']

@@ -192,7 +192,7 @@ def plot_horizontals(h_data, h_fig,  f_size=12):
 
 #%% File uploader, that accepts only tup files. Other files can be uploaded but only the tup files will be accepted.
 accepted_ftype = ['tup']
-st.title("Folder Upload System")
+folder_title = st.title("Folder Upload System")
 
 uploaded_files = st.file_uploader("Choose files from a folder", accept_multiple_files=True, type=accepted_ftype)
 
@@ -258,7 +258,7 @@ if uploaded_files:
     
     status_text = st.empty()
     progress_bar = st.progress(0)
-    
+
     #Display the dataframe from reading the tup files for testing purposes
     selected_columns = ['PanelType', 'PanelThickness', 'PanelMaterial']
     st.header('Panel Schedule')
@@ -310,5 +310,7 @@ if uploaded_files:
      # Clear the status message when done
     status_text.empty()
     progress_bar.empty()
+    folder_title.empty()
+    uploaded_files.empty()
 
     

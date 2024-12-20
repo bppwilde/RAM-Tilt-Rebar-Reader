@@ -256,6 +256,9 @@ if uploaded_files:
 
     st.write(f"Number of files: {len(uploaded_files)}")
     
+    status_text = st.empty()
+    progress_bar = st.progress(0)
+    
     #Display the dataframe from reading the tup files for testing purposes
     selected_columns = ['PanelType', 'PanelThickness', 'PanelMaterial']
     st.header('Panel Schedule')
@@ -264,9 +267,6 @@ if uploaded_files:
 
     # Display the dataframe with the calculated height
     st.dataframe(df[selected_columns], height=df_height)
-
-    status_text = st.empty()
-    progress_bar = st.progress(0)
 
     for index, row in df.iterrows():
 

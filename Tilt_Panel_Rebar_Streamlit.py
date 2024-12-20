@@ -196,8 +196,14 @@ folder_title = st.title("Upload RAM files:")
 
 placeholder = st.empty()
 
-with placeholder:
-    uploaded_files = st.file_uploader("Choose files from a folder", accept_multiple_files=True, type=accepted_ftype)
+# Toggle for file uploader visibility
+show_uploader = st.checkbox("Hide", value=False)
+
+if show_uploader:
+    placeholder = st.empty()
+else:
+    with placeholder:
+        uploaded_files = st.file_uploader("Choose files from a folder", accept_multiple_files=True, type=accepted_ftype)
 
 # Define a list of items to look for in each line
 items = ['PanelType', 'ParapetHeight', 'BottomPanelHeight', 'PanelHeight', 'PanelLength', 'PanelThickness', 'PanelMaterial', 'Openings', 'DataVBarsCount', 'DataVBarsVBars','DataHBarsCount', 'DataHBarsHBars']
@@ -313,6 +319,5 @@ if uploaded_files:
     status_text.empty()
     progress_bar.empty()
     folder_title.empty()
-    placeholder.empty()
 
     

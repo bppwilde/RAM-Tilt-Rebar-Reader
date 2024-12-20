@@ -192,9 +192,12 @@ def plot_horizontals(h_data, h_fig,  f_size=12):
 
 #%% File uploader, that accepts only tup files. Other files can be uploaded but only the tup files will be accepted.
 accepted_ftype = ['tup']
-folder_title = st.title("Folder Upload System")
+folder_title = st.title("Upload RAM files:")
 
-uploaded_files = st.file_uploader("Choose files from a folder", accept_multiple_files=True, type=accepted_ftype)
+placeholder = st.empty()
+
+with placeholder:
+    uploaded_files = st.file_uploader("Choose files from a folder", accept_multiple_files=True, type=accepted_ftype)
 
 # Define a list of items to look for in each line
 items = ['PanelType', 'ParapetHeight', 'BottomPanelHeight', 'PanelHeight', 'PanelLength', 'PanelThickness', 'PanelMaterial', 'Openings', 'DataVBarsCount', 'DataVBarsVBars','DataHBarsCount', 'DataHBarsHBars']
@@ -312,6 +315,6 @@ if uploaded_files:
     status_text.empty()
     progress_bar.empty()
     folder_title.empty()
-    uploaded_files.empty()
+    placeholder.empty()
 
     

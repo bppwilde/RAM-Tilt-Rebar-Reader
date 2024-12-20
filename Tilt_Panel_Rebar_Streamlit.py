@@ -265,6 +265,9 @@ if uploaded_files:
     # Display the dataframe with the calculated height
     st.dataframe(df[selected_columns], height=df_height)
 
+    status_text = st.empty()
+    progress_bar = st.progress(0)
+
     for index, row in df.iterrows():
 
         # Plot the graph on the appropriate subplot by splitting the subfigure into Vertical and Horizontal rebar graphs
@@ -298,5 +301,14 @@ if uploaded_files:
         horzs.set_title("Horizontal Rebar", fontsize=14)
         # plt.tight_layout()
         st.pyplot(fig)
+
+        # Update the progress bar and status message
+        progress = (index + 1) / len(df)
+        progress_bar.progress(progress)
+        status_text.text(f"Processing file {index+1} of {len(df)}")
+
+     # Clear the status message when done
+    status_text.empty()
+    progress_bar.empty()
 
     

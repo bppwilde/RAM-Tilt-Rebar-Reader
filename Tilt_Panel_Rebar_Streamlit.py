@@ -282,7 +282,7 @@ if uploaded_files:
             'ncol': 4,
             'fancybox': True,
             'shadow': False,
-            'fontsize':11
+            'fontsize':10
         }
         verts.legend(**legend_params)
         horzs.legend(**legend_params)

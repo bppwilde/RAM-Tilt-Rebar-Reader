@@ -193,34 +193,36 @@ def plot_horizontals(h_data, h_fig,  f_size=12):
 #%% File uploader, that accepts only tup files. Other files can be uploaded but only the tup files will be accepted.
 accepted_ftype = ['tup']
 folder_title = st.title("Upload RAM files:")
+# Create a placeholder for the file uploader
+uploader_placeholder = st.empty()
+
+# Create a container for the plots
+plot_container = st.container()
+
 
 show_uploader = st.checkbox("Show file uploader", value=True)
 placeholder = st.empty()
 
 if show_uploader:
     folder_title.text("Upload RAM files:")
-    with placeholder:
-        uploaded_files = st.file_uploader("Choose files from a folder", accept_multiple_files=True, type=accepted_ftype)
-else:
-    folder_title.empty()
-    placeholder.empty()
+    with uploader_placeholder:
+            uploaded_files = st.file_uploader("Choose files from a folder", accept_multiple_files=True, type=accepted_ftype)
 
-# Define a list of items to look for in each line
-items = ['PanelType', 'ParapetHeight', 'BottomPanelHeight', 'PanelHeight', 'PanelLength', 'PanelThickness', 'PanelMaterial', 'Openings', 'DataVBarsCount', 'DataVBarsVBars','DataHBarsCount', 'DataHBarsHBars']
+    # Define a list of items to look for in each line
+    items = ['PanelType', 'ParapetHeight', 'BottomPanelHeight', 'PanelHeight', 'PanelLength', 'PanelThickness', 'PanelMaterial', 'Openings', 'DataVBarsCount', 'DataVBarsVBars','DataHBarsCount', 'DataHBarsHBars']
 
-# Initialize an empty dictionary for each item
-item_dict = {key: np.nan for key in items}
+    # Initialize an empty dictionary for each item
+    item_dict = {key: np.nan for key in items}
 
-# Define a blank Dataframe with the column names
-df = pd.DataFrame(columns = items)
+    # Define a blank Dataframe with the column names
+    df = pd.DataFrame(columns = items)
 
-if uploaded_files:
-    # Create a temporary directory to store uploaded files
-    temp_dir = "temp_wall_files"
-    os.makedirs(temp_dir, exist_ok=True)
-    i = 0
-    for file in uploaded_files:
-        if file.name.endswith('.tup'):
+    if uploaded_files:
+        # Create a temporary directory to store uploaded files
+        temp_dir = "temp_wall_files"
+        os.makedirs(temp_dir, exist_ok=True)
+        i = 0
+        for file in uploaded_files:
             # Set Panel type to the name of the .tup file
             item_dict['PanelType']=file.name.replace('.tup', '')
 
@@ -255,69 +257,72 @@ if uploaded_files:
             for key in item_dict:
                 item_dict[key] = np.nan
 
-    # Change Material to psi and thickness add inches
-    df['PanelMaterial'] = df['PanelMaterial'] + '000 psi'
-    df['PanelThickness'] = df['PanelThickness'] + ' inches'
-    df['Tfc'] = 'T=' + df['PanelThickness'] + '/f\'c=' + df['PanelMaterial']
-    
-    
-    files_up_succ = st.success(f"Files uploaded successfully.")
-    
-    status_text = st.empty()
-    status_text.text(f"Waiting to process files: {0} of {len(df)}")
-    progress_bar = st.progress(0)
+        # Change Material to psi and thickness add inches
+        df['PanelMaterial'] = df['PanelMaterial'] + '000 psi'
+        df['PanelThickness'] = df['PanelThickness'] + ' inches'
+        df['Tfc'] = 'T=' + df['PanelThickness'] + '/f\'c=' + df['PanelMaterial']
+        
+        
+        files_up_succ = st.success(f"Files uploaded successfully.")
+        
+        status_text = st.empty()
+        status_text.text(f"Waiting to process files: {0} of {len(df)}")
+        progress_bar = st.progress(0)
 
-    #Display the dataframe from reading the tup files for testing purposes
-    selected_columns = ['PanelType', 'PanelThickness', 'PanelMaterial']
-    st.header('Panel Schedule')
-    # Calculate the height based on the number of rows in the dataframe
-    df_height = (len(df) + 1) * 35 + 3  # Adjust the multiplier as needed for your specific case
+        #Display the dataframe from reading the tup files for testing purposes
+        selected_columns = ['PanelType', 'PanelThickness', 'PanelMaterial']
+        st.header('Panel Schedule')
+        # Calculate the height based on the number of rows in the dataframe
+        df_height = (len(df) + 1) * 35 + 3  # Adjust the multiplier as needed for your specific case
 
-    # Display the dataframe with the calculated height
-    st.dataframe(df[selected_columns], height=df_height)
+        # Display the dataframe with the calculated height
+        st.dataframe(df[selected_columns], height=df_height)
 
-    for index, row in df.iterrows():
+        for index, row in df.iterrows():
 
-        # Plot the graph on the appropriate subplot by splitting the subfigure into Vertical and Horizontal rebar graphs
-        fig, (verts, horzs) = plt.subplots(1, 2, figsize=(16, 14))
+            # Plot the graph on the appropriate subplot by splitting the subfigure into Vertical and Horizontal rebar graphs
+            fig, (verts, horzs) = plt.subplots(1, 2, figsize=(16, 14))
 
-        # Use the modules to generate the graphs for verticals and horizontals
-        plot_verticals(row, verts, f_size=11)
-        plot_horizontals(row, horzs, f_size=11)
-        # Set titles
-        xp = 0
-        wp = float(row['PanelLength'])
-        yp = -float(row['BottomPanelHeight'])
-        hp = -yp + float(row['ParapetHeight']) + float(row['PanelHeight'])
-        panel_out = Rectangle((xp,yp), wp, hp, edgecolor = 'black', fill=False, lw=5)
-        # Place the legend between the title and the plot
-        legend_params = {
-            'loc': 9,
-            'bbox_to_anchor': (0.5, 1.1),
-            'ncol': 4,
-            'fancybox': True,
-            'shadow': False,
-            'fontsize':10
-        }
-        verts.legend(**legend_params)
-        horzs.legend(**legend_params)
+            # Use the modules to generate the graphs for verticals and horizontals
+            plot_verticals(row, verts, f_size=11)
+            plot_horizontals(row, horzs, f_size=11)
+            # Set titles
+            xp = 0
+            wp = float(row['PanelLength'])
+            yp = -float(row['BottomPanelHeight'])
+            hp = -yp + float(row['ParapetHeight']) + float(row['PanelHeight'])
+            panel_out = Rectangle((xp,yp), wp, hp, edgecolor = 'black', fill=False, lw=5)
+            # Place the legend between the title and the plot
+            legend_params = {
+                'loc': 9,
+                'bbox_to_anchor': (0.5, 1.1),
+                'ncol': 4,
+                'fancybox': True,
+                'shadow': False,
+                'fontsize':10
+            }
+            verts.legend(**legend_params)
+            horzs.legend(**legend_params)
 
-        tx = panel_out.get_x() + panel_out.get_width()
-        ty = panel_out.get_y() + panel_out.get_height()
-        fig.suptitle(f"{row['PanelType']}, {row['Tfc']}", fontsize=24)
-        verts.set_title(f"Vertical Rebar (L={tx} ft, T/wall={ty} ft)", fontsize=14)
-        horzs.set_title("Horizontal Rebar", fontsize=14)
-        # plt.tight_layout()
-        st.pyplot(fig)
+            tx = panel_out.get_x() + panel_out.get_width()
+            ty = panel_out.get_y() + panel_out.get_height()
+            fig.suptitle(f"{row['PanelType']}, {row['Tfc']}", fontsize=24)
+            verts.set_title(f"Vertical Rebar (L={tx} ft, T/wall={ty} ft)", fontsize=14)
+            horzs.set_title("Horizontal Rebar", fontsize=14)
+            # plt.tight_layout()
+            st.pyplot(fig)
 
-        # Update the progress bar and status message
-        progress = (index + 1) / len(df)
-        progress_bar.progress(progress)
-        status_text.text(f"Processing file {index+1} of {len(df)}")
+            # Update the progress bar and status message
+            progress = (index + 1) / len(df)
+            progress_bar.progress(progress)
+            status_text.text(f"Processing file {index+1} of {len(df)}")
 
-     # Clear the status message when done
-    status_text.empty()
-    progress_bar.empty()
-    files_up_succ.empty()
+        # Clear the status message when done
+        status_text.empty()
+        progress_bar.empty()
+        files_up_succ.empty()
+else:
+    folder_title.empty()
+    placeholder.empty()
 
     

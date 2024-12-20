@@ -259,7 +259,11 @@ if uploaded_files:
     #Display the dataframe from reading the tup files for testing purposes
     selected_columns = ['PanelType', 'PanelThickness', 'PanelMaterial']
     st.header('Panel Schedule')
-    st.dataframe(df[selected_columns])
+    # Calculate the height based on the number of rows in the dataframe
+    df_height = (len(df) + 1) * 35 + 3  # Adjust the multiplier as needed for your specific case
+
+    # Display the dataframe with the calculated height
+    st.dataframe(df[selected_columns], height=df_height)
 
     for index, row in df.iterrows():
 

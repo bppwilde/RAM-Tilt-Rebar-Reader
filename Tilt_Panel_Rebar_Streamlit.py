@@ -255,9 +255,7 @@ if uploaded_files:
     df['Tfc'] = 'T=' + df['PanelThickness'] + '/f\'c=' + df['PanelMaterial']
     
     
-    st.success(f"Files uploaded successfully.")
-
-    st.write(f"Number of files: {len(uploaded_files)}")
+    files_up_succ = st.success(f"Files uploaded successfully.")
     
     status_text = st.empty()
     status_text.text(f"Waiting to process files: {0} of {len(df)}")
@@ -316,5 +314,6 @@ if uploaded_files:
     progress_bar.empty()
     folder_title.empty()
     placeholder.empty()
+    files_up_succ.empty()
 
     

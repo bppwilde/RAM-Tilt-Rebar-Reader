@@ -257,6 +257,7 @@ if uploaded_files:
     st.write(f"Number of files: {len(uploaded_files)}")
     
     status_text = st.empty()
+    status_text.text(f"Waiting to process files: {0} of {len(df)}")
     progress_bar = st.progress(0)
 
     #Display the dataframe from reading the tup files for testing purposes

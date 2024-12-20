@@ -264,11 +264,11 @@ if uploaded_files:
     for index, row in df.iterrows():
 
         # Plot the graph on the appropriate subplot by splitting the subfigure into Vertical and Horizontal rebar graphs
-        fig, (verts, horzs) = plt.subplots(1, 2, figsize=(16, 16))
+        fig, (verts, horzs) = plt.subplots(1, 2, figsize=(16, 12))
 
         # Use the modules to generate the graphs for verticals and horizontals
-        plot_verticals(row, verts)
-        plot_horizontals(row, horzs)
+        plot_verticals(row, verts, f_size=10)
+        plot_horizontals(row, horzs, f_size=10)
         # Set titles
         xp = 0
         wp = float(row['PanelLength'])
@@ -282,7 +282,7 @@ if uploaded_files:
             'ncol': 4,
             'fancybox': True,
             'shadow': False,
-            'fontsize':8
+            'fontsize':10
         }
         verts.legend(**legend_params)
         horzs.legend(**legend_params)

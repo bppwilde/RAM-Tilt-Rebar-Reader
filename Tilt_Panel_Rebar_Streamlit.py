@@ -184,7 +184,7 @@ folder_title = st.title("Upload RAM files:")
 placeholder = st.empty()
 
 with placeholder:
-    uploaded_files = st.file_uploader("Choose files from a folder", accept_multiple_files=True, type=accepted_ftype, key="file_uploader_1")
+    uploaded_files = st.file_uploader("Choose files from a folder", accept_multiple_files=True, type=accepted_ftype)
 
 # Define a list of items to look for in each line
 items = ['PanelType', 'ParapetHeight', 'BottomPanelHeight', 'PanelHeight', 'PanelLength', 'PanelThickness', 'PanelMaterial', 'Openings', 'DataVBarsCount', 'DataVBarsVBars','DataHBarsCount', 'DataHBarsHBars']
@@ -197,16 +197,6 @@ if 'item_dict' not in ss:
     ss.item_dict = {}
 if 'df' not in ss:
     ss.df = pd.DataFrame()
-
-folder_title = st.title("Upload RAM files:")
-
-placeholder = st.empty()
-
-with placeholder:
-    uploaded_files = st.file_uploader("Choose files from a folder", accept_multiple_files=True, type=accepted_ftype)
-
-# Define a list of items to look for in each line
-items = ['PanelType', 'ParapetHeight', 'BottomPanelHeight', 'PanelHeight', 'PanelLength', 'PanelThickness', 'PanelMaterial', 'Openings', 'DataVBarsCount', 'DataVBarsVBars','DataHBarsCount', 'DataHBarsHBars']
 
 if uploaded_files:
     # Create a unique temporary directory for the session

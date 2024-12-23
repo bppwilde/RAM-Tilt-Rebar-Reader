@@ -121,7 +121,6 @@ def plot_verticals(v_data, v_fig, l_size=10, f_size=12):
             v_fig.annotate(line[0].get_label().replace('@','\n@'), xy=(xdata[0], mean(ydata)), rotation=90, fontsize = f_size, ha='center', va='center', bbox=dict(facecolor='white', edgecolor=line[0].get_color()))
 
 
-        
 #%% How to plot horizontal rebar
 def plot_horizontals(h_data, h_fig,  f_size=12):
     panel_geom(h_data, h_fig)

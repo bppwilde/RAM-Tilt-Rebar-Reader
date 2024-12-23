@@ -16,7 +16,7 @@ def simplify_fraction(numerator, denominator):
     common = gcd(numerator, denominator)
     return numerator // common, denominator // common
 
-def feet_to_feet_fractional_inches(decimal_feet):
+def dec_frac(decimal_feet):
     feet = int(decimal_feet)
     inches = (decimal_feet - feet) * 12
     fractional_inches = Fraction(inches).limit_denominator(16)

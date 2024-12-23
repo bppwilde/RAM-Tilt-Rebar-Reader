@@ -10,27 +10,27 @@ from matplotlib.patches import Rectangle
 #from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 from statistics import mean
 from fractions import Fraction
-from math import gcd
-
-def simplify_fraction(numerator, denominator):
-    common = gcd(numerator, denominator)
-    return numerator // common, denominator // common
 
 def dec_frac(decimal_feet):
     feet = int(decimal_feet)
     inches = (decimal_feet - feet) * 12
-    fractional_inches = Fraction(inches).limit_denominator(16)
     
-    numerator = fractional_inches.numerator * (16 // fractional_inches.denominator)
+    # Round to nearest 1/16th of an inch
+    rounded_inches = round(inches * 16) / 16
     
-    if numerator == 0:
-        return f"{feet} ft 0 in"
-    elif numerator == 16:
-        return f"{feet + 1} ft 0 in"
+    whole_inches = int(rounded_inches)
+    fractional_inches = Fraction(rounded_inches - whole_inches).limit_denominator(16)
+    
+    if fractional_inches == 0:
+        if whole_inches == 0:
+            return f"{feet} ft 0 in"
+        else:
+            return f"{feet} ft {whole_inches} in"
+    elif fractional_inches == 1:
+        return f"{feet} ft {whole_inches + 1} in"
     else:
-        simplified_num, simplified_den = simplify_fraction(numerator, 16)
-        return f"{feet} ft {simplified_num}/{simplified_den} in"
-
+        return f"{feet} ft {whole_inches} {fractional_inches.numerator}/{fractional_inches.denominator} in"
+    
 #%% Overall Panel geometry generation
 def panel_geom(pnl_data, p_fig):
     # Prep the panel outline XY points to use rectangle patch and add to figure
@@ -305,7 +305,7 @@ if uploaded_files:
         horzs.legend(**legend_params)
 
         tx = dec_frac(panel_out.get_x() + panel_out.get_width())
-        ty = (panel_out.get_y() + panel_out.get_height())
+        ty = dec_frac(panel_out.get_y() + panel_out.get_height())
         fig.suptitle(f"{row['PanelType']}, {row['Tfc']}", fontsize=24)
         verts.set_title(f"Vertical Rebar (L={tx}, T/wall={ty})", fontsize=14)
         horzs.set_title("Horizontal Rebar", fontsize=14)

@@ -9,19 +9,13 @@ import matplotlib.pyplot as plt
 from matplotlib.patches import Rectangle
 #from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 from statistics import mean
+from fractions import Fraction
 
-#%% Test Plot
-def test_plot(x, s_title):
-    st.title(f"Matplotlib Plot #{x}")
-    st.header(f"Line = {s_title}")
-    fig, ax = plt.subplots()
-    ax.plot([1, 2, 3, 4, 5])
-    ax.set_xlabel("X-axis")
-    ax.set_ylabel("Y-axis")
-    ax.set_title("Simple Line Plot")
-
-    st.pyplot(fig)
-
+def dec_frac(decimal_feet):
+    feet = int(decimal_feet)
+    inches = (decimal_feet - feet) * 12
+    fractional_inches = Fraction(inches).limit_denominator(16)  # Limit the denominator to 16 for common fractional inches
+    return f"{feet} ft {fractional_inches} in"
 
 #%% Overall Panel geometry generation
 def panel_geom(pnl_data, p_fig):
@@ -296,8 +290,8 @@ if uploaded_files:
         verts.legend(**legend_params)
         horzs.legend(**legend_params)
 
-        tx = panel_out.get_x() + panel_out.get_width()
-        ty = panel_out.get_y() + panel_out.get_height()
+        tx = dec_frac(panel_out.get_x() + panel_out.get_width())
+        ty = dec_frac(panel_out.get_y() + panel_out.get_height())
         fig.suptitle(f"{row['PanelType']}, {row['Tfc']}", fontsize=24)
         verts.set_title(f"Vertical Rebar (L={tx:.3f} ft, T/wall={ty:.3f} ft)", fontsize=14)
         horzs.set_title("Horizontal Rebar", fontsize=14)

@@ -10,12 +10,26 @@ from matplotlib.patches import Rectangle
 #from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 from statistics import mean
 from fractions import Fraction
+from math import gcd
 
-def dec_frac(decimal_feet):
+def simplify_fraction(numerator, denominator):
+    common = gcd(numerator, denominator)
+    return numerator // common, denominator // common
+
+def feet_to_feet_fractional_inches(decimal_feet):
     feet = int(decimal_feet)
     inches = (decimal_feet - feet) * 12
-    fractional_inches = Fraction(inches).limit_denominator(16)  # Limit the denominator to 16 for common fractional inches
-    return f"{feet} ft {fractional_inches} in"
+    fractional_inches = Fraction(inches).limit_denominator(16)
+    
+    numerator = fractional_inches.numerator * (16 // fractional_inches.denominator)
+    
+    if numerator == 0:
+        return f"{feet} ft 0 in"
+    elif numerator == 16:
+        return f"{feet + 1} ft 0 in"
+    else:
+        simplified_num, simplified_den = simplify_fraction(numerator, 16)
+        return f"{feet} ft {simplified_num}/{simplified_den} in"
 
 #%% Overall Panel geometry generation
 def panel_geom(pnl_data, p_fig):

@@ -305,9 +305,9 @@ if uploaded_files:
         horzs.legend(**legend_params)
 
         tx = dec_frac(panel_out.get_x() + panel_out.get_width())
-        ty = dec_frac(panel_out.get_y() + panel_out.get_height())
+        ty = (panel_out.get_y() + panel_out.get_height())
         fig.suptitle(f"{row['PanelType']}, {row['Tfc']}", fontsize=24)
-        verts.set_title(f"Vertical Rebar (L={tx} ft, T/wall={ty} ft)", fontsize=14)
+        verts.set_title(f"Vertical Rebar (L={tx}, T/wall={ty})", fontsize=14)
         horzs.set_title("Horizontal Rebar", fontsize=14)
         # plt.tight_layout()
         st.pyplot(fig)

@@ -5,23 +5,11 @@ import pandas as pd
 import streamlit as st
 import os
 import io
+import tempfile
 import matplotlib.pyplot as plt
 from matplotlib.patches import Rectangle
 #from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 from statistics import mean
-
-#%% Test Plot
-def test_plot(x, s_title):
-    st.title(f"Matplotlib Plot #{x}")
-    st.header(f"Line = {s_title}")
-    fig, ax = plt.subplots()
-    ax.plot([1, 2, 3, 4, 5])
-    ax.set_xlabel("X-axis")
-    ax.set_ylabel("Y-axis")
-    ax.set_title("Simple Line Plot")
-
-    st.pyplot(fig)
-
 
 #%% Overall Panel geometry generation
 def panel_geom(pnl_data, p_fig):
@@ -202,27 +190,42 @@ with placeholder:
 # Define a list of items to look for in each line
 items = ['PanelType', 'ParapetHeight', 'BottomPanelHeight', 'PanelHeight', 'PanelLength', 'PanelThickness', 'PanelMaterial', 'Openings', 'DataVBarsCount', 'DataVBarsVBars','DataHBarsCount', 'DataHBarsHBars']
 
-# Initialize an empty dictionary for each item
-item_dict = {key: np.nan for key in items}
+# Create an alias for st.session_state
+ss = st.session_state
 
-# Define a blank Dataframe with the column names
-df = pd.DataFrame(columns = items)
+# Initialize session state variables if they don't exist
+if 'item_dict' not in ss:
+    ss.item_dict = {}
+if 'df' not in ss:
+    ss.df = pd.DataFrame()
+
+folder_title = st.title("Upload RAM files:")
+
+placeholder = st.empty()
+
+with placeholder:
+    uploaded_files = st.file_uploader("Choose files from a folder", accept_multiple_files=True, type=accepted_ftype)
+
+# Define a list of items to look for in each line
+items = ['PanelType', 'ParapetHeight', 'BottomPanelHeight', 'PanelHeight', 'PanelLength', 'PanelThickness', 'PanelMaterial', 'Openings', 'DataVBarsCount', 'DataVBarsVBars','DataHBarsCount', 'DataHBarsHBars']
 
 if uploaded_files:
-    # Create a temporary directory to store uploaded files
-    temp_dir = "temp_wall_files"
-    os.makedirs(temp_dir, exist_ok=True)
-    i = 0
+    # Create a unique temporary directory for the session
+    temp_dir = tempfile.mkdtemp(prefix="temp_wall_files_")
+
+    # Process each uploaded file
     for file in uploaded_files:
+        # Save the uploaded file to the temporary directory
+        file_path = os.path.join(temp_dir, file.name)
+        with open(file_path, "wb") as f:
+            f.write(file.getbuffer())
+
+        # Your existing code to process the file
         if file.name.endswith('.tup'):
             # Set Panel type to the name of the .tup file
-            item_dict['PanelType']=file.name.replace('.tup', '')
+            ss.item_dict['PanelType'] = file.name.replace('.tup', '')
 
             # Read all lines in the file
-            # lines = file.read().decode('utf-8', errors='replace')
-            # # lines = file.read().decode('utf-8')
-            # st.header(f"First line = {lines[0]}")
-            # Loop through each line in the file
             for encoded_line in file:
                 line = encoded_line.decode("utf-8", errors="replace").strip()
                 # Loop through each item in the items list
@@ -235,42 +238,41 @@ if uploaded_files:
                             if value.startswith('C'):
                                 value = value.split("-")[0].strip().replace("C ", "")
                             # Append the value to the dictionary with a semicolon separator
-                            if str(item_dict[item]) == 'nan':
-                                item_dict[item] = value
+                            if str(ss.item_dict[item]) == 'nan':
+                                ss.item_dict[item] = value
                             else:
-                                item_dict[item] = str(item_dict[item]) + ';' + value
+                                ss.item_dict[item] = str(ss.item_dict[item]) + ';' + value
                             break
                         except:
                             # If the item is not in the line, append None to the dictionary
-                            item_dict[item] = None
+                            ss.item_dict[item] = None
 
-            df1 = pd.DataFrame.from_dict([item_dict])
-            df = pd.concat([df, df1], ignore_index=True)
-            for key in item_dict:
-                item_dict[key] = np.nan
+            df1 = pd.DataFrame.from_dict([ss.item_dict])
+            ss.df = pd.concat([ss.df, df1], ignore_index=True)
+            for key in ss.item_dict:
+                ss.item_dict[key] = np.nan
 
     # Change Material to psi and thickness add inches
-    df['PanelMaterial'] = df['PanelMaterial'] + '000 psi'
-    df['PanelThickness'] = df['PanelThickness'] + ' inches'
-    df['Tfc'] = 'T=' + df['PanelThickness'] + '/f\'c=' + df['PanelMaterial']
-    
-    
+    ss.df['PanelMaterial'] = ss.df['PanelMaterial'] + '000 psi'
+    ss.df['PanelThickness'] = ss.df['PanelThickness'] + ' inches'
+    ss.df['Tfc'] = 'T=' + ss.df['PanelThickness'] + '/f\'c=' + ss.df['PanelMaterial']
+
     st.success(f"Files uploaded successfully.")
-    
+
     status_text = st.empty()
-    status_text.text(f"Waiting to process files: {0} of {len(df)}")
+    status_text.text(f"Waiting to process files: {0} of {len(ss.df)}")
     progress_bar = st.progress(0)
 
-    #Display the dataframe from reading the tup files for testing purposes
+    # Display the dataframe from reading the tup files for testing purposes
     selected_columns = ['PanelType', 'PanelThickness', 'PanelMaterial']
     st.header('Panel Schedule')
     # Calculate the height based on the number of rows in the dataframe
-    df_height = (len(df) + 1) * 35 + 3  # Adjust the multiplier as needed for your specific case
+    df_height = (len(ss.df) + 1) * 35 + 3  # Adjust the multiplier as needed for your specific case
 
     # Display the dataframe with the calculated height
-    st.dataframe(df[selected_columns], height=df_height)
+    st.dataframe(ss.df[selected_columns], height=df_height)
 
-    for index, row in df.iterrows():
+    for index, row in ss.df.iterrows():
 
         # Plot the graph on the appropriate subplot by splitting the subfigure into Vertical and Horizontal rebar graphs
         fig, (verts, horzs) = plt.subplots(1, 2, figsize=(16, 14))
@@ -305,13 +307,11 @@ if uploaded_files:
         st.pyplot(fig)
 
         # Update the progress bar and status message
-        progress = (index + 1) / len(df)
+        progress = (index + 1) / len(ss.df)
         progress_bar.progress(progress)
-        status_text.text(f"Processing file {index+1} of {len(df)}")
+        status_text.text(f"Processing file {index+1} of {len(ss.df)}")
 
      # Clear the status message when done
     status_text.empty()
     progress_bar.empty()
     folder_title.empty()
-
-    

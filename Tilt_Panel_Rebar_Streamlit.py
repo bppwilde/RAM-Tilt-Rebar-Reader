@@ -299,7 +299,7 @@ if uploaded_files:
         tx = panel_out.get_x() + panel_out.get_width()
         ty = panel_out.get_y() + panel_out.get_height()
         fig.suptitle(f"{row['PanelType']}, {row['Tfc']}", fontsize=24)
-        verts.set_title(f"Vertical Rebar (L={tx} ft, T/wall={ty} ft)", fontsize=14)
+        verts.set_title(f"Vertical Rebar (L={tx:.3f} ft, T/wall={ty:.3f} ft)", fontsize=14)
         horzs.set_title("Horizontal Rebar", fontsize=14)
         # plt.tight_layout()
         st.pyplot(fig)
